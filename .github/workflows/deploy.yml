@@ -1,0 +1,42 @@
+name: CI/CD Pipeline - Secure Hotel Booking
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        
+    - name: Install Dependencies
+      run: |
+        cd frontend && npm install
+        cd ../backend && npm install
+        
+    - name: CI Checks & Security Audit
+      run: |
+        cd backend
+        npm audit --audit-level=high || true
+        # Add automated CI code checks here
+        
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build
+
+  deploy-aws:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy Placeholder
+        run: echo "Integrating AWS Beanstalk or ECS deployment hooks here..."
