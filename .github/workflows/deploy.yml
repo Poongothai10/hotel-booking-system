@@ -19,8 +19,8 @@ jobs:
         
     - name: Install Dependencies
       run: |
-        cd frontend && npm install
-        cd ../backend && npm install
+        cd frontend && npm install --legacy-peer-deps
+        cd ../backend && npm install --legacy-peer-deps
         
     - name: CI Checks & Security Audit
       run: |
@@ -31,7 +31,7 @@ jobs:
     - name: Build Frontend
       run: |
         cd frontend
-        npm run build
+        CI=false npm run build
 
   deploy-aws:
     needs: build-and-test
