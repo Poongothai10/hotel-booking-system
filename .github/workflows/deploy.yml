@@ -10,28 +10,20 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18.x'
+        node-version: '20.x'
         
-    - name: Install Dependencies
-      run: |
-        cd frontend && npm install --no-package-lock --legacy-peer-deps
-        cd ../backend && npm install --no-package-lock --legacy-peer-deps
-        
-    - name: CI Checks & Security Audit
-      run: |
-        cd backend
-        npm audit --audit-level=high || true
-        # Add automated CI code checks here
-        
-    - name: Build Frontend
+    - name: Install and Build
       run: |
         cd frontend
-        CI=false npm run build
+        npm install --no-package-lock --legacy-peer-deps
+        npm run build
+        cd ../backend
+        npm install --no-package-lock --legacy-peer-deps
 
   deploy-aws:
     needs: build-and-test
